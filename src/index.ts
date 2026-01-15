@@ -57,7 +57,12 @@ function createServer() {
             const response = await plausibleClient.query(
               args.site_id,
               args.metrics,
-              args.date_range
+              args.date_range,
+              args.dimensions,
+              args.filters,
+              args.order_by,
+              args.include,
+              args.pagination
             );
             return {
               content: [{ type: "text", text: JSON.stringify(response) }],
