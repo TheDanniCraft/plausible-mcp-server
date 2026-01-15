@@ -1,11 +1,22 @@
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
 
+// Filter types based on Plausible API documentation
+export type SimpleFilter = 
+  | [string, string, string[]]  // [operator, dimension, clauses]
+  | [string, string, string[], Record<string, any>];  // [operator, dimension, clauses, modifiers]
+
+export type LogicalFilter = 
+  | ["and" | "or", Array<SimpleFilter | LogicalFilter>]
+  | ["not", SimpleFilter | LogicalFilter];
+
+export type Filter = SimpleFilter | LogicalFilter;
+
 export interface QueryArgs {
   site_id: string;
   metrics: string[];
   date_range: string | [string, string];
   dimensions?: string[];
-  filters?: any[];
+  filters?: Filter[];
   order_by?: [string, "asc" | "desc"][];
   include?: {
     imports?: boolean;
