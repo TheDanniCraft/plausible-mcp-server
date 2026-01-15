@@ -4,6 +4,14 @@ export interface QueryArgs {
   site_id: string;
   metrics: string[];
   date_range: string;
+  include?: {
+    time_labels?: boolean;
+    total_rows?: boolean;
+  };
+  pagination?: {
+    limit?: number;
+    offset?: number;
+  };
 }
 
 export const queryTool: Tool = {
@@ -29,6 +37,36 @@ export const queryTool: Tool = {
         type: "string",
         description:
           'Date range for the query, with the following options: ["2024-01-01", "2024-07-01"] Custom date range (ISO8601) | ["2024-01-01T12:00:00+02:00", "2024-01-01T15:59:59+02:00"] Custom date-time range (ISO8601) | "day"	Current day (e.g. 2024-07-01) | "7d"	Last 7 days relative to today | "30d"	Last 30 days relative to today | "month" Since the start of the current month | "6mo" Last 6 months relative to start of this month | "12mo" Last 12 months relative to start of this month | "year" Since the start of this year | "all"',
+      },
+      include: {
+        type: "object",
+        description: "Optional flags to include additional data in the response",
+        properties: {
+          time_labels: {
+            type: "boolean",
+            description:
+              "Requires a time dimension being set. If true, sets meta.time_labels in response containing all time labels valid for date_range. Default: false",
+          },
+          total_rows: {
+            type: "boolean",
+            description:
+              "Should be used for pagination. If true, sets meta.total_rows in response containing the total number of rows for this query. Default: false",
+          },
+        },
+      },
+      pagination: {
+        type: "object",
+        description: "Pagination options. Default: { limit: 10000, offset: 0 }",
+        properties: {
+          limit: {
+            type: "number",
+            description: "Maximum number of rows to return. Default: 10000",
+          },
+          offset: {
+            type: "number",
+            description: "Number of rows to skip. Default: 0",
+          },
+        },
       },
     },
   },
